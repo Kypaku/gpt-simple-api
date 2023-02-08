@@ -9,6 +9,7 @@ npm i gpt-simple-api-ts
 # Sample:
 
 ```
+// import SimpleAPI from 'gpt-simple-api-ts'
 const SimpleAPI = require('gpt-simple-api-ts')
 
 SimpleAPI.setApiKey(process.env.OPENAI_API_KEY)
