@@ -8,7 +8,7 @@ npm i gpt-simple-api-ts
 
 # Example:
 
-```
+```js
 // import SimpleAPI from 'gpt-simple-api-ts'
 const SimpleAPI = require('gpt-simple-api-ts')
 
