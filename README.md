@@ -12,10 +12,10 @@ npm i gpt-simple-api-ts
 // import SimpleAPI from 'gpt-simple-api-ts'
 const SimpleAPI = require('gpt-simple-api-ts')
 
-SimpleAPI.setApiKey(process.env.OPENAI_API_KEY)
+const api = new SimpleAPI({key: process.env.OPENAI_API_KEY})
 
 async function main () {
-    const res = await SimpleAPI.getFirst("Give me a reason")
+    const res = await api.getFirst("Give me a reason")
     console.log("main", res)
 }
 
