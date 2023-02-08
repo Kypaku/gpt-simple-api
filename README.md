@@ -6,7 +6,7 @@ A simple client GPT API written in Typescript.
 npm i gpt-simple-api-ts
 ```
 
-# Sample:
+# Example:
 
 ```
 // import SimpleAPI from 'gpt-simple-api-ts'
