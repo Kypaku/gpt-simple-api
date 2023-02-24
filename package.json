@@ -1,6 +1,6 @@
 {
   "name": "gpt-simple-api-ts",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "A simple client GPT API written in TypeScript",
   "main": "lib/index.js",
   "scripts": {

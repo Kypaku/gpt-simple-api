@@ -5,11 +5,28 @@ export default class SimpleGPT {
     protected _configuration: Configuration | null
     protected _openai: OpenAIApi | null
 
+    public get chatGPTQuery(): CreateCompletionRequest {
+        return {
+            max_tokens: 1000,
+            model:"text-davinci-003",
+            temperature: 0.8,
+            top_p: 1,
+            presence_penalty: 1,
+            stop: ["<|endoftext|>"],
+            prompt: "Instructions:\nYou are ChatGPT, a large language model trained by OpenAI.\nCurrent date: 2023-02-24<|endoftext|>\n\nUser:\n\nTEXT<|endoftext|>\n\nChatGPT:\n",
+            stream: false
+        }
+    }
+
     constructor ({key}: {key: string}) {
         this._key = ""
         this._configuration = null
         this._openai = null
         this.setApiKey(key)
+    }
+
+    async chatGPT(prompt: string, opts?: CreateCompletionRequest): Promise<string | undefined> {
+        return await this.getFirst((this.chatGPTQuery?.prompt as string)?.replace("TEXT", prompt), {...this.chatGPTQuery, ...(opts || {})})
     }
 
     async get(prompt: string, opts?: CreateCompletionRequest): Promise<null | string[]> {
@@ -26,8 +43,8 @@ export default class SimpleGPT {
         return response.data.choices.map((choice) => choice.text).filter(Boolean) as string[];
     }
 
-    async getFirst(promt: string, opts?: CreateCompletionRequest): Promise<string | undefined> {
-        return (await this.get(promt, opts))?.[0];
+    async getFirst(prompt: string, opts?: CreateCompletionRequest): Promise<string | undefined> {
+        return (await this.get(prompt, opts))?.[0];
     }
 
     async getCode(prompt: string, opts?: CreateCompletionRequest): Promise<null | string[]> {
