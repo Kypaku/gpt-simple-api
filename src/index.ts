@@ -8,7 +8,7 @@ export default class SimpleGPT {
     public get chatGPTQuery(): CreateCompletionRequest {
         return {
             max_tokens: 1000,
-            model:"text-davinci-003",
+            model:"gpt-3.5-turbo-0301",
             temperature: 0.8,
             top_p: 1,
             presence_penalty: 1,
@@ -25,14 +25,14 @@ export default class SimpleGPT {
         this.setApiKey(key)
     }
 
-    async chatGPT(prompt: string, opts?: CreateCompletionRequest): Promise<string | undefined> {
+    async chatGPT(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<string | undefined> {
         return await this.getFirst((this.chatGPTQuery?.prompt as string)?.replace("TEXT", prompt), {...this.chatGPTQuery, ...(opts || {})})
     }
 
-    async get(prompt: string, opts?: CreateCompletionRequest): Promise<null | string[]> {
+    async get(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<null | string[]> {
         if (!this._openai) return null;
         const response = await this._openai.createCompletion({
-            model: opts?.model || "text-davinci-003",
+            model: opts?.model || "gpt-3.5-turbo-0301",
             prompt: prompt || opts?.prompt,
             temperature: opts?.temperature || 0,
             max_tokens: opts?.max_tokens || 60,
@@ -43,11 +43,11 @@ export default class SimpleGPT {
         return response.data.choices.map((choice) => choice.text).filter(Boolean) as string[];
     }
 
-    async getFirst(prompt: string, opts?: CreateCompletionRequest): Promise<string | undefined> {
+    async getFirst(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<string | undefined> {
         return (await this.get(prompt, opts))?.[0];
     }
 
-    async getCode(prompt: string, opts?: CreateCompletionRequest): Promise<null | string[]> {
+    async getCode(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<null | string[]> {
         if (!this._openai) return null;
         const response = await this._openai.createCompletion({
             model: opts?.model || "code-davinci-002",
@@ -61,7 +61,7 @@ export default class SimpleGPT {
         return response.data.choices.map((choice) => choice.text).filter(Boolean) as string[];
     }
 
-    async getCodeFirst(prompt: string, opts?: CreateCompletionRequest): Promise<string | undefined> {
+    async getCodeFirst(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<string | undefined> {
         return (await this.getCode(prompt, opts))?.[0];
     }
 
