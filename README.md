@@ -22,13 +22,19 @@ async function main () {
 main()
 ```
 
-## Methods:
+# Methods:
 
-# setApiKey(key: string)
+### setApiKey(key: string)
 
 Sets the key
 To get an API KEY you need to register new OPEN API account and then visit https://platform.openai.com/account/api-keys
 
+### Others
+```ts
+async chatGPT(promt: string, opts?: CreateCompletionRequest): Promise<null | string[]> 
+```
+
+Get an answer as a ChatGPT
 
 ```ts
 async get(promt: string, opts?: CreateCompletionRequest): Promise<null | string[]> 
@@ -56,3 +62,7 @@ async getCodeFirst(promt: string, opts?: CreateCompletionRequest): Promise<strin
 ```
 
 Get one code complettion
+
+# Projects that use it:
+
+[Vue-Gpt-Example](https://github.com/Kypaku/vue-gpt-example)
