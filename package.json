@@ -1,13 +1,16 @@
 {
   "name": "gpt-simple-api-ts",
-  "version": "1.0.11",
+  "version": "1.0.17",
   "description": "A simple client GPT API written in TypeScript",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"No test specified\" && exit 1",
     "build": "tsc"
   },
-  "files": ["lib/**/*", "README.md"],
+  "files": [
+    "lib/**/*",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kypaku/gpt-simple-api.git"
@@ -25,6 +28,7 @@
   },
   "homepage": "https://github.com/Kypaku/gpt-simple-api#readme",
   "dependencies": {
-    "openai": "^3.1.0"
+    "blob-util": "^2.0.2",
+    "openai": "^3.2.1"
   }
 }

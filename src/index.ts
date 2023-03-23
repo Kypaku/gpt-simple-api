@@ -1,10 +1,13 @@
-import { Configuration, OpenAIApi, CreateCompletionRequest, CreateCompletionResponse, CreateImageRequestSizeEnum } from "openai";
+import { Configuration, OpenAIApi, CreateCompletionRequest, CreateChatCompletionRequest, CreateImageRequestSizeEnum } from "openai";
 
 export default class SimpleGPT {
     protected _key: string
     protected _configuration: Configuration | null
     protected _openai: OpenAIApi | null
 
+    public get chatModels(): string[] {
+        return ["gpt-3.5-turbo", "gpt-3.5-turbo-0301"]
+    }
     public get chatGPTQuery(): CreateCompletionRequest {
         return {
             max_tokens: 1000,
@@ -18,6 +21,17 @@ export default class SimpleGPT {
         }
     }
 
+    public get defaultOptsGPT(): Partial<CreateCompletionRequest> {
+        return {
+            model: "gpt-3.5-turbo-0301",
+            temperature: 0,
+            max_tokens: 60,
+            top_p: 1,
+            frequency_penalty: 0.5,
+            presence_penalty: 0
+        }
+    }
+
     constructor ({key}: {key: string}) {
         this._key = ""
         this._configuration = null
@@ -25,25 +39,34 @@ export default class SimpleGPT {
         this.setApiKey(key)
     }
 
+    async transcribe(file: File, opts?: Partial<{model: string, prompt: string, temperature: number, response_format: string}>): Promise<string | undefined> {
+        const response = await this._openai?.createTranscription(file, opts?.model || 'whisper-1', opts?.prompt, opts?.response_format, opts?.temperature )
+        return response?.data.text
+    }
     async chatGPT(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<string | undefined> {
-        return await this.getFirst((this.chatGPTQuery?.prompt as string)?.replace("TEXT", prompt), {...this.chatGPTQuery, ...(opts || {})})
+        return await this.getFirst((this.chatGPTQuery?.prompt as string)?.replace("TEXT", prompt), {...this.chatGPTQuery, ...(opts || {})} as any)
     }
 
-    async get(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<null | string[]> {
+    async get(prompt: string, opts?: Partial<CreateCompletionRequest & CreateChatCompletionRequest>): Promise<null | string[]> {
         if (!this._openai) return null;
-        const response = await this._openai.createCompletion({
-            model: opts?.model || "gpt-3.5-turbo-0301",
-            prompt: prompt || opts?.prompt,
-            temperature: opts?.temperature || 0,
-            max_tokens: opts?.max_tokens || 60,
+        const model = opts?.model || this.defaultOptsGPT.model || ''
+        const isChatModel = this.chatModels.indexOf(model) >= 0
+        const _prompt =  (prompt || opts?.prompt)
+        const messages =  opts?.messages || [{role: "user", content: _prompt as string}]
+        const response = await this._openai[isChatModel ? "createChatCompletion" : "createCompletion"]({
+            model,
+            prompt: isChatModel ? undefined : _prompt,
+            messages: messages,
+            temperature: opts?.temperature || this.defaultOptsGPT.temperature,
+            max_tokens: opts?.max_tokens || this.defaultOptsGPT.max_tokens || 0,
             top_p: opts?.top_p || 1,
-            frequency_penalty: opts?.frequency_penalty || 0.5,
-            presence_penalty: opts?.presence_penalty || 0,
+            frequency_penalty: opts?.frequency_penalty || this.defaultOptsGPT.frequency_penalty,
+            presence_penalty: opts?.presence_penalty || this.defaultOptsGPT.presence_penalty,
         });
-        return response.data.choices.map((choice) => choice.text).filter(Boolean) as string[];
+        return response.data.choices.map((choice: any) => choice.text || choice.message?.content).filter(Boolean) as string[];
     }
 
-    async getFirst(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<string | undefined> {
+    async getFirst(prompt: string, opts?: Partial<CreateCompletionRequest & CreateChatCompletionRequest>): Promise<string | undefined> {
         return (await this.get(prompt, opts))?.[0];
     }
 
