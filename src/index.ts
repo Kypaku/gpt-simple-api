@@ -6,7 +6,7 @@ export default class SimpleGPT {
     protected _openai: OpenAIApi | null
 
     public get chatModels(): string[] {
-        return ["gpt-3.5-turbo", "gpt-3.5-turbo-0301"]
+        return ["gpt-3.5-turbo", "gpt-3.5-turbo-0301", "gpt-4", "gpt-4-0314"]
     }
     public get chatGPTQuery(): CreateCompletionRequest {
         return {
@@ -39,10 +39,19 @@ export default class SimpleGPT {
         this.setApiKey(key)
     }
 
-    async transcribe(file: File, opts?: Partial<{model: string, prompt: string, temperature: number, response_format: string}>): Promise<string | undefined> {
-        const response = await this._openai?.createTranscription(file, opts?.model || 'whisper-1', opts?.prompt, opts?.response_format, opts?.temperature )
-        return response?.data.text
+    async transcribe(options: any) {
+        try {
+            const response = await fetch(
+                "https://api.openai.com/v1/audio/transcriptions",
+                options
+            );
+            const json = await response.json();
+            return json.text;
+        } catch (err) {
+            console.log(err);
+        }
     }
+
     async chatGPT(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<string | undefined> {
         return await this.getFirst((this.chatGPTQuery?.prompt as string)?.replace("TEXT", prompt), {...this.chatGPTQuery, ...(opts || {})} as any)
     }
