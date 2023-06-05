@@ -50,7 +50,7 @@ export default class SimpleGPT {
         return response.text;
     }
 
-    async getStream(prompt: string, fData: (raw: any, json: {[key: string]: any}, delta: string) => any, fEnd: any, opts?: Partial<CreateCompletionRequest & CreateChatCompletionRequest>): Promise<void> {
+    async getStream(prompt: string, fData: (delta: string, json: {[key: string]: any}, raw: any) => any, fEnd?: any, opts?: Partial<CreateCompletionRequest & CreateChatCompletionRequest>): Promise<void> {
         return new Promise((resolve, reject) => {
             const model = opts?.model || this.defaultOptsGPT.model || "";
 
@@ -89,7 +89,7 @@ export default class SimpleGPT {
                     }
                 });
                 res.on("end", () => {
-                    fEnd();
+                    fEnd?.();
                     resolve();
                 });
             });
