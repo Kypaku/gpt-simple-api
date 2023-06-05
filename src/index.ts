@@ -74,7 +74,8 @@ export default class SimpleGPT {
                     try {
                         let delta = "";
                         const lines = chunk?.toString()?.split("\n") || [];
-                        const line = lines.filter((line: string) => line.trim()).at(-1);
+                        const filtredLines = lines.filter((line: string) => line.trim()) 
+                        const line = filtredLines[filtredLines.length - 1]
                         const data = line.toString().replace("data:", "").replace("[DONE]", "").replace("data: [DONE]", "").trim();
                         if (data) {
                             const json = JSON.parse(data);
