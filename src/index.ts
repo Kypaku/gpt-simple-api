@@ -1,6 +1,6 @@
 import { Configuration, OpenAIApi, CreateCompletionRequest, CreateChatCompletionRequest, CreateImageRequestSizeEnum } from "openai";
 // import https from "https";
-const https = require('https')
+const https = require('https-browserify')
 
 export default class SimpleGPT {
     protected _key: string
