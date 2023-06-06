@@ -3,6 +3,7 @@ import { Configuration, OpenAIApi, CreateCompletionRequest, CreateChatCompletion
 const http = require('stream-http')
 
 const request = function (params: {[key: string]: any}, cb: any) {
+    params.protocol = 'https:'
     return http.request.call({}, params, cb)
 }
 
