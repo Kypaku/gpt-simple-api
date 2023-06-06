@@ -1,6 +1,10 @@
 import { Configuration, OpenAIApi, CreateCompletionRequest, CreateChatCompletionRequest, CreateImageRequestSizeEnum } from "openai";
 // import https from "https";
-const https = require('https-browserify')
+const http = require('stream-http')
+
+const request = function (params: {[key: string]: any}, cb: any) {
+    return http.request.call({}, params, cb)
+}
 
 export default class SimpleGPT {
     protected _key: string
@@ -60,7 +64,7 @@ export default class SimpleGPT {
 
             const endpoint = isChatModel ? "/v1/chat/completions" : "/v1/completions";
 
-            const req = https.request({
+            const req = request({
                 hostname: "api.openai.com",
                 port: 443,
                 path: endpoint,
