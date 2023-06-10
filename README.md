@@ -75,4 +75,5 @@ async transcribe(formData): Promise<string | undefined>
 
 # Projects that use it:
 
-[Vue-Gpt-Example](https://github.com/Kypaku/vue-gpt-example)
+[Vue-Gpt-Playground](https://github.com/Kypaku/vue-gpt-example)
+[GPT ProjectInsight](https://github.com/Kypaku/gpt-project-insight)
