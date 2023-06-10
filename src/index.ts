@@ -55,7 +55,7 @@ export default class SimpleGPT {
         return response.text;
     }
 
-    async getStream(prompt: string, fData: (delta: string, json: {[key: string]: any}, raw: any) => any, fEnd?: any, opts?: Partial<CreateCompletionRequest & CreateChatCompletionRequest>): Promise<void> {
+    async getStream(prompt: string, fData: (raw: any, json: {[key: string]: any}, delta: string) => any, fEnd: any, opts?: Partial<CreateCompletionRequest & CreateChatCompletionRequest>): Promise<void> {
         return new Promise((resolve, reject) => {
             const model = opts?.model || this.defaultOptsGPT.model || "";
 
@@ -78,23 +78,27 @@ export default class SimpleGPT {
                 res.on("data", (chunk: any) => {
                     try {
                         let delta = "";
+                        if (chunk?.toString().match(/^\{\n\s+\"error\"\:/)) {
+                            console.error("getStream error:", chunk.toString());
+                            reject(JSON.parse(chunk.toString().trim()));
+                            return
+                        }
                         const lines = chunk?.toString()?.split("\n") || [];
-                        const filtredLines = lines.filter((line: string) => line.trim()) 
-                        const line = filtredLines[filtredLines.length - 1]
+                        const line = lines.filter((line: string) => line.trim()).at(-1);
                         const data = line.toString().replace("data:", "").replace("[DONE]", "").replace("data: [DONE]", "").trim();
                         if (data) {
                             const json = JSON.parse(data);
                             json.choices.forEach((choice: any) => {
                                 delta += choice.text || choice.message?.content || choice.delta?.content || "";
                             });
-                            fData(delta, json, chunk.toString());
+                            fData(chunk.toString(), json, delta);
                         }
                     } catch (e) {
                         console.error("getStream handle chunk error:", e, chunk.toString());
                     }
                 });
                 res.on("end", () => {
-                    fEnd?.();
+                    fEnd();
                     resolve();
                 });
             });
