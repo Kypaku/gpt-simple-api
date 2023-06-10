@@ -92,14 +92,14 @@ export default class SimpleGPT {
                             json.choices.forEach((choice: any) => {
                                 delta += choice.text || choice.message?.content || choice.delta?.content || "";
                             });
-                            fData(chunk.toString(), json, delta);
+                            fData(delta, json, chunk.toString());
                         }
                     } catch (e) {
                         console.error("getStream handle chunk error:", e, chunk.toString());
                     }
                 });
                 res.on("end", () => {
-                    fEnd();
+                    fEnd?.();
                     resolve();
                 });
             });
