@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "es2015",
+      "outDir": "./lib/browser",
+      "lib": ["dom", "es6"]
+    },
+    "include": ["src/**/*"]
+  }
+  
