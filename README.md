@@ -30,29 +30,32 @@ Sets the key
 To get an API KEY you need to register new OPEN API account and then visit https://platform.openai.com/account/api-keys
 
 ### Others
-Get an answer as a ChatGPT:
-```ts
-async chatGPT(promt: string, opts?: CreateCompletionRequest): Promise<null | string[]> 
-```
-
-Get text completions:
-
-```ts
-async get(promt: string, opts?: CreateCompletionRequest): Promise<null | string[]> 
-```
-
-
-Get one text completion:
-
-```ts
-async getFirst(promt: string, opts?: CreateCompletionRequest): Promise<string | undefined> 
-```
 
 Get stream:
 
 ```ts
 async getStream(promt: string, fData, fEnd, opts): Promise<any> 
 ```
+
+Get text response from GPT:
+
+```ts
+async getFirst(promt: string, opts?: CreateCompletionRequest): Promise<string | undefined> 
+```
+
+Transcribe audio:
+
+```ts
+async transcribe(formData): Promise<string | undefined> 
+```
+
+
+Get several text completions:
+
+```ts
+async get(promt: string, opts?: CreateCompletionRequest): Promise<null | string[]> 
+```
+
 
 Get code completions:
 
@@ -67,13 +70,14 @@ Get one code complettion:
 async getCodeFirst(promt: string, opts?: CreateCompletionRequest): Promise<string | undefined> 
 ```
 
-Transcribe audio:
-
-```ts
-async transcribe(formData): Promise<string | undefined> 
-```
 
 # Projects that use it:
 
+[GPTCraft](http://gptcraft.tech/)
+
+[GPTCraft Chrome Extension](https://chrome.google.com/webstore/detail/gptcraft/glmcffjbjjajjkciglccgelhidphgpgn)
+
 [Vue-Gpt-Playground](https://github.com/Kypaku/vue-gpt-example)
+
 [GPT ProjectInsight](https://github.com/Kypaku/gpt-project-insight)
+
