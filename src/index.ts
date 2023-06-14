@@ -218,10 +218,10 @@ export default class SimpleGPT {
         this._openai = new OpenAIApi(this._configuration);
     }
 
-    async getModels(): Promise<null | Model[]> {
+    async getModels(): Promise<null | string[]> {
         if (!this._openai) return null;
         const response = await this._openai.listModels();
-        return response.data.data || null;
+        return response.data.data.map((datum) => datum.id) || null;
     }
 }
 
