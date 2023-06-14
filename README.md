@@ -29,13 +29,22 @@ main()
 Sets the key
 To get an API KEY you need to register new OPEN API account and then visit https://platform.openai.com/account/api-keys
 
-### Others
+### Models
 
-Get stream:
+```ts
+async getModels(): Promise<null | string[]> 
+```
+
+### Streams:
 
 ```ts
 async getStream(promt: string, fData, fEnd, opts): Promise<any> 
 ```
+```ts
+abortStream
+```
+
+### Text generation
 
 Get text response from GPT:
 
@@ -43,20 +52,24 @@ Get text response from GPT:
 async getFirst(promt: string, opts?: CreateCompletionRequest): Promise<string | undefined> 
 ```
 
-Transcribe audio:
-
-```ts
-async transcribe(formData): Promise<string | undefined> 
-```
-
-
 Get several text completions:
 
 ```ts
 async get(promt: string, opts?: CreateCompletionRequest): Promise<null | string[]> 
 ```
 
+Completions:
+```ts
+async getCompletions(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<null | string[]>
+```
 
+### Transcribe audio
+
+```ts
+async transcribe(formData): Promise<string | undefined> 
+```
+
+### Code
 Get code completions:
 
 ```ts
