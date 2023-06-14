@@ -145,7 +145,7 @@ export default class SimpleGPT {
     async get(prompt: string, opts?: Partial<CreateCompletionRequest & CreateChatCompletionRequest>): Promise<null | string[]> {
         if (!this._openai) return null;
         const model = opts?.model || this.defaultOptsGPT.model || ''
-        const isChatModel = this.chatModels.indexOf(model) >= 0
+        const isChatModel = this.chatModels.find((chatModel) => model.includes(chatModel))
         const _prompt =  (prompt || opts?.prompt)
         const messages =  opts?.messages || [{role: "user", content: _prompt as string}]
         const response = await this._openai[isChatModel ? "createChatCompletion" : "createCompletion"]({
