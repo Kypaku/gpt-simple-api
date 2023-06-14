@@ -143,6 +143,7 @@ export default class SimpleGPT {
     abortStream() {
         this.req?.abort();
     }
+
     async get(prompt: string, opts?: Partial<CreateCompletionRequest & CreateChatCompletionRequest>): Promise<null | string[]> {
         if (!this._openai) return null;
         const model = opts?.model || this.defaultOptsGPT.model || ''
