@@ -1,12 +1,7 @@
-import { Configuration, OpenAIApi, CreateCompletionRequest, CreateChatCompletionRequest, CreateImageRequestSizeEnum, Model } from "openai";
-import * as request from "request";
+import { Configuration, OpenAIApi, CreateCompletionRequest, CreateChatCompletionRequest, CreateImageRequestSizeEnum } from "openai";
+// @ts-ignore
+import * as request from "./request/index.js";
 import AbortController from "abort-controller";
-
-export const maxTokensModels = {
-    "gpt-3.5-turbo": 4096,
-    "gpt-4": 8192,
-    "gpt-3.5-turbo-16k": 16384
-}
 
 
 export default class SimpleGPT {
@@ -18,14 +13,14 @@ export default class SimpleGPT {
 
 
     public get chatModels(): string[] {
-        return ["gpt-3.5-turbo", "gpt-4"]
+        return ["gpt-3.5-turbo", "gpt-3.5-turbo-0301", "gpt-4", "gpt-4-0314"]
     }
 
     public get defaultOptsGPT(): Partial<CreateCompletionRequest> {
         return {
-            model: "gpt-3.5-turbo-0613",
+            model: "gpt-3.5-turbo-0301",
             temperature: 0,
-            max_tokens: 200,
+            max_tokens: 60,
             top_p: 1,
             frequency_penalty: 0.5,
             presence_penalty: 0
@@ -64,7 +59,7 @@ export default class SimpleGPT {
         return new Promise((resolve, reject) => {
             const model = opts?.model || this.defaultOptsGPT.model || "";
 
-            const isChatModel = this.chatModels.find((chatModel) => model.includes(chatModel))
+            const isChatModel = this.chatModels.indexOf(model) >= 0;
             const _prompt = (prompt || opts?.prompt);
             const messages = opts?.messages || [{ role: "user", content: _prompt as string }];
 
@@ -161,20 +156,6 @@ export default class SimpleGPT {
         return response.data.choices.map((choice: any) => choice.text || choice.message?.content).filter(Boolean) as string[];
     }
 
-    async getCompletions(prompt: string, opts?: Partial<CreateCompletionRequest>): Promise<null | string[]> {
-        if (!this._openai) return null;
-        const response = await this._openai.createCompletion({
-            model: opts?.model || "curie:ft-user-1.0.0",
-            prompt: prompt || opts?.prompt,
-            temperature: opts?.temperature || 0,
-            max_tokens: opts?.max_tokens || 256,
-            top_p: opts?.top_p || 1,
-            frequency_penalty: opts?.frequency_penalty || 0,
-            presence_penalty: opts?.presence_penalty || 0,
-        });
-        return response.data.choices.map((choice) => choice.text).filter(Boolean) as string[];
-    }
-
     async getFirst(prompt: string, opts?: Partial<CreateCompletionRequest & CreateChatCompletionRequest>): Promise<string | undefined> {
         return (await this.get(prompt, opts))?.[0];
     }
@@ -216,12 +197,6 @@ export default class SimpleGPT {
             apiKey: this._key,
         });
         this._openai = new OpenAIApi(this._configuration);
-    }
-
-    async getModels(): Promise<null | Model[]> {
-        if (!this._openai) return null;
-        const response = await this._openai.listModels();
-        return response.data.data || null;
     }
 }
 
