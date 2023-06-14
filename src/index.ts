@@ -71,17 +71,18 @@ export default class SimpleGPT {
             const endpoint = isChatModel ? "/v1/chat/completions" : "/v1/completions";
             const signal = this.abortController.signal;
 
-            const body = JSON.stringify({
+            const bodyRaw = {
                 model,
                 prompt: isChatModel ? undefined : _prompt,
-                messages: messages,
+                messages: isChatModel ? messages : undefined,
                 temperature: opts?.temperature || this.defaultOptsGPT.temperature,
                 max_tokens: opts?.max_tokens || this.defaultOptsGPT.max_tokens || 0,
                 top_p: opts?.top_p || 1,
                 frequency_penalty: opts?.frequency_penalty || this.defaultOptsGPT.frequency_penalty,
                 presence_penalty: opts?.presence_penalty || this.defaultOptsGPT.presence_penalty,
                 stream: opts?.stream || true,
-            });
+            };
+            const body = JSON.stringify(bodyRaw);
 
             this.req = request({
                 url: "https://api.openai.com" + endpoint,
@@ -151,13 +152,13 @@ export default class SimpleGPT {
         const response = await this._openai[isChatModel ? "createChatCompletion" : "createCompletion"]({
             model,
             prompt: isChatModel ? undefined : _prompt,
-            messages: messages,
+            messages: isChatModel ? messages : undefined,
             temperature: opts?.temperature || this.defaultOptsGPT.temperature,
             max_tokens: opts?.max_tokens || this.defaultOptsGPT.max_tokens || 0,
             top_p: opts?.top_p || 1,
             frequency_penalty: opts?.frequency_penalty || this.defaultOptsGPT.frequency_penalty,
             presence_penalty: opts?.presence_penalty || this.defaultOptsGPT.presence_penalty,
-        });
+        } as any);
         return response.data.choices.map((choice: any) => choice.text || choice.message?.content).filter(Boolean) as string[];
     }
 
