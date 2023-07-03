@@ -10,6 +10,7 @@ export default class SimpleGPT {
     protected _openai: OpenAIApi | null
     protected req: any
     protected abortController: AbortController = new AbortController();
+    protected reader: any
 
 
     public get chatModels(): string[] {
