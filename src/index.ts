@@ -144,8 +144,8 @@ export default class SimpleGPT {
                             throw new Error(`Unexpected message: ${chunk}`);
                         }
                     }
-                    resolve();
                 }
+                resolve();
             });
         });
     }
