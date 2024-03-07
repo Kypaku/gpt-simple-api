@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi, CreateCompletionRequest, CreateChatCompletionRequest, CreateImageRequestSizeEnum, Model } from "openai";
+import { Configuration, OpenAIApi, CreateCompletionRequest, CreateChatCompletionRequest, CreateImageRequestSizeEnum, Model } from "openai-old";
 import * as request from "request";
 import AbortController from "abort-controller";
 

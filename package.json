@@ -1,6 +1,6 @@
 {
   "name": "gpt-simple-api-ts",
-  "version": "1.0.37",
+  "version": "1.0.39",
   "description": "A simple client GPT API written in TypeScript",
   "main": "lib/index.js",
   "scripts": {
@@ -35,7 +35,8 @@
     "https": "^1.0.0",
     "https-browserify": "^1.0.0",
     "import": "^0.0.6",
-    "openai": "^3.3.0",
+    "openai": "^4.28.4",
+    "openai-old": "npm:openai@^3.3.0",
     "request": "^2.88.2",
     "stream-http": "^3.2.0"
   },
