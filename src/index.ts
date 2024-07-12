@@ -164,11 +164,11 @@ export default class SimpleGPT {
             model,
             prompt: isChatModel ? undefined : _prompt,
             messages: isChatModel ? messages : undefined,
-            temperature: opts?.temperature || this.defaultOptsGPT.temperature,
-            max_tokens: opts?.max_tokens || this.defaultOptsGPT.max_tokens || 0,
-            top_p: opts?.top_p || 1,
-            frequency_penalty: opts?.frequency_penalty || this.defaultOptsGPT.frequency_penalty,
-            presence_penalty: opts?.presence_penalty || this.defaultOptsGPT.presence_penalty,
+            temperature: opts?.temperature ?? this.defaultOptsGPT.temperature,
+            max_tokens: opts?.max_tokens ?? this.defaultOptsGPT.max_tokens ?? 0,
+            top_p: opts?.top_p ?? 1,
+            frequency_penalty: opts?.frequency_penalty ?? this.defaultOptsGPT.frequency_penalty,
+            presence_penalty: opts?.presence_penalty ?? this.defaultOptsGPT.presence_penalty,
         } as any);
         return response.data.choices.map((choice: any) => choice.text || choice.message?.content).filter(Boolean) as string[];
     }
@@ -178,11 +178,11 @@ export default class SimpleGPT {
         const response = await this._openai.createCompletion({
             model: opts?.model || "curie:ft-user-1.0.0",
             prompt: prompt || opts?.prompt,
-            temperature: opts?.temperature || 0,
+            temperature: opts?.temperature ?? 0,
             max_tokens: opts?.max_tokens || 256,
             top_p: opts?.top_p || 1,
-            frequency_penalty: opts?.frequency_penalty || 0,
-            presence_penalty: opts?.presence_penalty || 0,
+            frequency_penalty: opts?.frequency_penalty ?? 0,
+            presence_penalty: opts?.presence_penalty ?? 0,
         });
         return response.data.choices.map((choice) => choice.text).filter(Boolean) as string[];
     }
@@ -196,11 +196,11 @@ export default class SimpleGPT {
         const response = await this._openai.createCompletion({
             model: opts?.model || "code-davinci-002",
             prompt: prompt || opts?.prompt,
-            temperature: opts?.temperature || 0,
+            temperature: opts?.temperature ?? 0,
             max_tokens: opts?.max_tokens || 256,
             top_p: opts?.top_p || 1,
-            frequency_penalty: opts?.frequency_penalty || 0,
-            presence_penalty: opts?.presence_penalty || 0,
+            frequency_penalty: opts?.frequency_penalty ?? 0,
+            presence_penalty: opts?.presence_penalty ?? 0,
         });
         return response.data.choices.map((choice) => choice.text).filter(Boolean) as string[];
     }
@@ -209,17 +209,18 @@ export default class SimpleGPT {
         return (await this.getCode(prompt, opts))?.[0];
     }
 
-    async getImages(prompt: string, n: number = 1, size: (256 | 512 | 1024) = 512): Promise<string[]> {
-        const response = await this._openai?.createImage({
+    async getImages(prompt: string, n: number = 1, size: (256 | 512 | 1024) = 512, model = 'dall-e-3'): Promise<string[]> {
+        const response = await (this._openai?.createImage as any)({
             prompt,
             n,
+            model,
             size: `${size}x${size}` as CreateImageRequestSizeEnum,
           });
-        return response?.data?.data.map((responseOne) => responseOne.url || '') || []
+        return response?.data?.data.map((responseOne: any) => responseOne.url || '') || []
     }
 
-    async getImage(prompt: string, size: (256 | 512 | 1024) = 512): Promise<string | undefined> {
-        return (await this.getImages(prompt, 1 , size))?.[0];
+    async getImage(prompt: string, size: (256 | 512 | 1024) = 512, model = 'dall-e-3'): Promise<string | undefined> {
+        return (await this.getImages(prompt, 1 , size, model))?.[0];
     }
 
     setApiKey(key: string) {

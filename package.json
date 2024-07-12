@@ -1,6 +1,6 @@
 {
   "name": "gpt-simple-api-ts",
-  "version": "1.0.39",
+  "version": "1.0.41",
   "description": "A simple client GPT API written in TypeScript",
   "main": "lib/index.js",
   "scripts": {
@@ -31,7 +31,7 @@
   "dependencies": {
     "abort-controller": "^3.0.0",
     "blob-util": "^2.0.2",
-    "gpt-simple-api-ts": "^1.0.19",
+    "gpt-simple-api-ts": "^1.0.40",
     "https": "^1.0.0",
     "https-browserify": "^1.0.0",
     "import": "^0.0.6",
